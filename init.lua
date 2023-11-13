@@ -1,9 +1,5 @@
 -- require "lsp_setup"
 
-function netrw_tree()
-    vim.cmd"Ntree" 
-end
-
 -- Numbering
 vim.wo.number = true
 vim.wo.relativenumber = true

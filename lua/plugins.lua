@@ -1,3 +1,4 @@
+-- lazy.nvim init
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 
 if not vim.loop.fs_stat(lazypath) then
@@ -12,11 +13,25 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
+-- Small function used for callback to setup lualine
 function status_line_setup() 
     return require("lualine").setup()
 end
 
+-- Callback for treesitter build
+function treesitter_build()
+    vim.cmd "TSUpdate"
+end
+
+-- Sets colour scheme
+function set_tokyo_night()
+    vim.cmd "colorscheme tokyonight-moon"
+end
+
+-- Plugins
 require("lazy").setup({
+    "tpope/vim-fugitive",
+    "ThePrimeagen/vim-be-good",
     {
         "nvim-lualine/lualine.nvim",
         dependencies = { "nvim-tree/nvim-web-devicons" },
@@ -24,9 +39,7 @@ require("lazy").setup({
     },
     { 
         "nvim-treesitter/nvim-treesitter",
-        build = (function() 
-            vim.cmd "TSUpdate"
-        end),
+        build = treesitter_build,
         config = require("treesitter") 
     },
     {
@@ -43,19 +56,12 @@ require("lazy").setup({
     {
         "folke/tokyonight.nvim",
         opts = {},
-        config = function() 
-            vim.cmd[[colorscheme tokyonight-moon]]
-        end
+        config = set_tokyo_night
     },
-    {
-        "tpope/vim-fugitive",
-        --config = require("fugitive")
-    },
-    "ThePrimeagen/vim-be-good",
     {
         'nvim-telescope/telescope.nvim', 
         tag = '0.1.4',
-        -- config = require("telescope_conf"),
+        config = require("telescope_conf"),
         dependencies = { 'nvim-lua/plenary.nvim' }
     }
 })
